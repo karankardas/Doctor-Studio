@@ -1,0 +1,2532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Prescription Studio - Dr. Rutul A. Gokalani</title>
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #e0f2fe;
+      --accent: #f97316;
+      --accent-hover: #ea580c;
+      --dark: #0f172a;
+      --panel-bg: #1e293b;
+      --card-bg: #0f172a;
+      --border-color: #334155;
+      --input-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0f172a;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation Bar */
+    header.app-header {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+    }
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.01em;
+    }
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      user-select: none;
+    }
+    .btn-upload-magic {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(249, 115, 22, 0.4);
+    }
+    .btn-upload-magic:hover {
+      background: linear-gradient(135deg, #ea580c, #c2410c);
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.6);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: #0284c7;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #0369a1;
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
+    }
+    .btn-success {
+      background: #16a34a;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #15803d;
+    }
+    .btn-secondary {
+      background: #334155;
+      color: #e2e8f0;
+      border-color: #475569;
+    }
+    .btn-secondary:hover {
+      background: #475569;
+      color: #fff;
+    }
+    .btn-outline {
+      background: transparent;
+      border-color: #64748b;
+      color: #cbd5e1;
+    }
+    .btn-outline:hover {
+      border-color: #94a3b8;
+      color: white;
+      background: rgba(255,255,255,0.05);
+    }
+    .btn-danger-outline {
+      background: transparent;
+      border-color: #ef4444;
+      color: #f87171;
+    }
+    .btn-danger-outline:hover {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.78rem;
+    }
+
+    /* Main Workspace Layout */
+    .app-workspace {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 61px);
+      overflow: hidden;
+    }
+
+    /* Left Control / Editor Panel */
+    .editor-panel {
+      width: 500px;
+      min-width: 440px;
+      max-width: 560px;
+      background: var(--panel-bg);
+      color: #e2e8f0;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .editor-content {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Magic Upload Callout */
+    .upload-callout-card {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(2, 132, 199, 0.15));
+      border: 1.5px dashed #f97316;
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .upload-callout-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #fdba74;
+    }
+    .upload-callout-text {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .panel-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #1e293b;
+    }
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid #475569;
+      color: #f8fafc;
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      outline: none;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 55px;
+    }
+
+    /* Medicine Form Items */
+    .medicine-card {
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      border-left: 3px solid #0284c7;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .medicine-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .medicine-number {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .chip {
+      background: #334155;
+      color: #cbd5e1;
+      padding: 2px 7px;
+      font-size: 0.7rem;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .chip:hover {
+      background: #0284c7;
+      color: white;
+    }
+
+    /* Right Preview Panel */
+    .preview-panel {
+      flex: 1;
+      background: #334155;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-toolbar {
+      width: 100%;
+      max-width: 210mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      color: #e2e8f0;
+      font-size: 0.85rem;
+    }
+    .preview-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #cbd5e1;
+      font-size: 0.82rem;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* THE EXACT A4 PRESCRIPTION SHEET */
+    .rx-paper {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      color: #111827;
+      padding: 13mm 16mm 14mm 16mm;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      font-size: 11.5px;
+      line-height: 1.35;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Prescription Header */
+    .rx-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 10px;
+      border-bottom: 2.5px solid #111827;
+    }
+
+    .rx-clinic-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-container {
+      width: 135px;
+      height: 75px;
+      display: flex;
+      align-items: center;
+    }
+    .logo-svg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .custom-logo-img {
+      max-width: 135px;
+      max-height: 75px;
+      object-fit: contain;
+    }
+
+    .rx-doctor-info {
+      text-align: right;
+      max-width: 440px;
+    }
+    .rx-doctor-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 2px;
+    }
+    .rx-doctor-degrees {
+      font-size: 9.5px;
+      color: #222;
+      line-height: 1.3;
+    }
+    .rx-doctor-degrees div {
+      margin-bottom: 1px;
+    }
+
+    /* Patient Details Bar */
+    .rx-patient-bar {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .rx-patient-row-1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-weight: 700;
+      color: #000;
+    }
+    .rx-patient-row-2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 10.5px;
+      color: #111;
+      margin-top: 2px;
+    }
+    .rx-patient-divider {
+      border: 0;
+      border-top: 1px solid #d1d5db;
+      margin: 6px 0;
+    }
+
+    /* Vitals Strip */
+    .rx-vitals {
+      font-size: 10px;
+      color: #111;
+      line-height: 1.45;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .rx-vitals span {
+      display: inline-block;
+    }
+    .rx-vitals .sep {
+      color: #374151;
+      margin: 0 4px;
+      font-weight: 700;
+    }
+
+    /* Labs Section */
+    .rx-labs {
+      font-size: 9.5px;
+      color: #111;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .rx-lab-line {
+      margin-bottom: 2px;
+    }
+
+    /* Diagnosis */
+    .rx-diagnosis {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #000;
+      margin-top: 5px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    /* Rx Symbol */
+    .rx-symbol {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-style: italic;
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Medicines Table */
+    .rx-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2px;
+      font-size: 10.5px;
+    }
+    .rx-table th {
+      border-top: 1.5px solid #000;
+      border-bottom: 1.5px solid #000;
+      padding: 4px 6px;
+      text-align: left;
+      font-weight: 700;
+      color: #000;
+      font-size: 10.5px;
+    }
+    .rx-table th.col-dosage {
+      text-align: center;
+      width: 110px;
+    }
+    .rx-table th.col-timing {
+      width: 250px;
+    }
+    .rx-table th.col-qty {
+      text-align: right;
+      width: 50px;
+    }
+
+    .rx-med-item {
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .rx-med-main {
+      padding: 5px 6px 2px 6px;
+      vertical-align: top;
+    }
+    .rx-med-name {
+      font-weight: 700;
+      color: #000;
+      font-size: 10.5px;
+    }
+    .rx-med-dosage {
+      text-align: center;
+      font-weight: 600;
+      color: #000;
+      font-size: 10.5px;
+      white-space: nowrap;
+    }
+    .rx-med-timing {
+      color: #111;
+      font-size: 10px;
+    }
+    .rx-med-qty {
+      text-align: right;
+      font-weight: 600;
+      color: #000;
+      font-size: 10.5px;
+    }
+    .rx-med-sub {
+      padding: 0px 6px 5px 22px;
+      font-size: 9px;
+      color: #374151;
+      line-height: 1.35;
+    }
+    .rx-composition {
+      color: #222;
+    }
+    .rx-notes {
+      color: #333;
+    }
+
+    /* Next Visit / Follow-up */
+    .rx-next-visit {
+      margin-top: 14px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    /* Prescription Footer */
+    .rx-paper-footer {
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    .rx-signature-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .rx-qr-promo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 380px;
+    }
+    .rx-qr-code {
+      width: 52px;
+      height: 52px;
+      border: 1px solid #d1d5db;
+      padding: 2px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .rx-qr-text {
+      font-size: 8.5px;
+      color: #4b5563;
+      line-height: 1.25;
+    }
+
+    .rx-signature-box {
+      text-align: center;
+      min-width: 160px;
+    }
+    .signature-canvas-container {
+      height: 38px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rx-doctor-sign-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #000;
+      border-top: 1px solid #111;
+      padding-top: 4px;
+    }
+
+    .rx-system-footer {
+      text-align: center;
+      font-size: 8.5px;
+      color: #6b7280;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 6px;
+      margin-top: 6px;
+    }
+
+    /* Editable inline styling */
+    [contenteditable="true"] {
+      outline: none;
+      border-radius: 2px;
+      transition: background-color 0.15s, box-shadow 0.15s;
+    }
+    [contenteditable="true"]:hover {
+      background-color: rgba(2, 132, 199, 0.08);
+      cursor: text;
+    }
+    [contenteditable="true"]:focus {
+      background-color: rgba(2, 132, 199, 0.15);
+      box-shadow: 0 0 0 1px #0284c7;
+    }
+
+    /* Modal Dialog for Upload / Paste Text */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 650px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalScale 0.2s ease-out;
+    }
+    @keyframes modalScale {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+    }
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 75vh;
+      overflow-y: auto;
+    }
+    .dropzone {
+      border: 2px dashed #0284c7;
+      background: rgba(2, 132, 199, 0.06);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      background: rgba(2, 132, 199, 0.15);
+      border-color: #38bdf8;
+    }
+    .dropzone-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .dropzone-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+    }
+    .dropzone-sub {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+    }
+
+    /* Scanning animation overlay inside modal */
+    .scan-status-box {
+      display: none;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(56, 189, 248, 0.2);
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 10px auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0284c7;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 2000;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Print Styles: Pure A4 Clean Print */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      header.app-header,
+      .editor-panel,
+      .preview-toolbar,
+      .modal-overlay,
+      #toast,
+      .no-print {
+        display: none !important;
+      }
+      .app-workspace {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .preview-panel {
+        background: transparent !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        display: block !important;
+      }
+      .rx-paper {
+        width: 100% !important;
+        min-height: auto !important;
+        box-shadow: none !important;
+        padding: 8mm 12mm 8mm 12mm !important;
+        margin: 0 !important;
+        page-break-after: auto;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 6mm;
+      }
+      [contenteditable="true"]:hover,
+      [contenteditable="true"]:focus {
+        background-color: transparent !important;
+        box-shadow: none !important;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .app-workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+      }
+      .editor-panel {
+        width: 100%;
+        max-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .preview-panel {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Navigation -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">℞</div>
+      <div>
+        <div class="brand-title">Smart Prescription Studio</div>
+        <div class="brand-subtitle">HealthPlix / Clinic Exact Template with Auto-Fill</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Magic Upload Button -->
+      <button class="btn btn-upload-magic" onclick="openUploadModal()" title="Upload text file or paste text to auto-populate everything in seconds!">
+        ⚡ Upload Text & Auto-Fill
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="loadSampleData()" title="Reload exact Dr. Rutul Gokalani sample prescription">
+        🔄 Reset Sample
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="clearAllFields()" title="Clear form for a new patient">
+        ✨ New Patient
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="saveToLocalRecords()" title="Save current patient record to browser">
+        💾 Save Record
+      </button>
+      <button class="btn btn-primary" onclick="window.print()" title="Print prescription or save as clean PDF">
+        🖨️ Print / Save PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace: Left Editor + Right Live A4 Sheet -->
+  <div class="app-workspace">
+
+    <!-- Left Editor Sidebar -->
+    <aside class="editor-panel">
+      <div class="editor-content">
+        
+        <!-- Magic Upload Quick Card -->
+        <div class="upload-callout-card">
+          <div class="upload-callout-header">
+            <span>⚡ Have a prescription text file?</span>
+          </div>
+          <div class="upload-callout-text">
+            Upload your text file or paste raw text. The smart engine will extract patient info, vitals, labs, and all medications in seconds!
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button class="btn btn-upload-magic btn-sm" onclick="openUploadModal()">
+              📂 Upload / Paste Text
+            </button>
+            <input type="file" id="quickDirectFileInput" accept=".txt,.text,.json,.csv,.log,.md" style="display: none;" onchange="handleDirectFileSelect(event)">
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('quickDirectFileInput').click()">
+              Choose File
+            </button>
+          </div>
+        </div>
+
+        <!-- Saved Patients Quick Picker -->
+        <div class="panel-section" id="savedRecordsSection" style="display: none;">
+          <div class="section-header">
+            <span class="section-title">📂 Saved Patient Records</span>
+            <button class="btn btn-sm btn-danger-outline" onclick="clearSavedRecords()">Clear All</button>
+          </div>
+          <div id="savedRecordsList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
+
+        <!-- Doctor & Clinic Settings -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-title">🏥 Doctor & Clinic Branding</span>
+            <button class="btn btn-sm btn-outline" onclick="toggleDoctorFields()">Expand / Edit</button>
+          </div>
+          <div id="doctorFieldsContainer" style="display: block;">
+            <div class="form-group">
+              <label>Doctor Full Name</label>
+              <input type="text" id="inputDoctorName" value="Dr. Rutul A. Gokalani (Thakkar)" oninput="syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>Qualifications & Fellowships (One per line)</label>
+              <textarea id="inputQualifications" rows="6" oninput="syncPreview()">M.D. (Physician) FID (Fellow in Diabetes)
+Apollo Hospitals & Liverpool, U.K.
+PG Diploma in Diabetes, Middlesex Uni. U.K.
+PG Diploma in Diabetes & Complications, EASD, Czech Republic
+PG Diploma in Diabetes & Technology (Greece)
+Certified in Diabetology (RSSDI)
+CCGDM, CCMTD, CCDR, CCGDM (PHFI)</textarea>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Signature Text</label>
+                <input type="text" id="inputSignName" value="Dr Rutul Gokalani" oninput="syncPreview()">
+              </div>
+              <div class="form-group">
+                <label>Upload Logo (Optional)</label>
+                <input type="file" id="logoUploadInput" accept="image/*" onchange="handleLogoUpload(event)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Patient Demographics -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-title">👤 Patient Details</span>
+            <button class="btn btn-sm btn-outline" onclick="setCurrentDateTime()">Set Current Time</button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Reg / Patient ID</label>
+              <input type="text" id="inputPatientId" value="5224" oninput="syncPreview()">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label>Patient Full Name</label>
+              <input type="text" id="inputPatientName" value="Mr. Nigam Parikh" oninput="syncPreview()">
+            </div>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>Age</label>
+              <input type="text" id="inputAge" value="74y" oninput="syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="inputGender" onchange="syncPreview()">
+                <option value="Male" selected>Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Blood Group</label>
+              <input type="text" id="inputBloodGroup" value="B+ve" oninput="syncPreview()">
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Mobile Number</label>
+              <input type="text" id="inputPhone" value="9426638923" oninput="syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>Ref. By</label>
+              <input type="text" id="inputRefBy" value="Dr. Google" oninput="syncPreview()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Prescription Date & Time</label>
+            <input type="text" id="inputDateTime" value="27-Oct-2026 05:37 PM" oninput="syncPreview()">
+          </div>
+        </div>
+
+        <!-- Vitals & Measurements -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-title">🩺 Vitals & Measurements</span>
+            <button class="btn btn-sm btn-outline" onclick="autoCalculateBMI()">Auto Calculate BMI</button>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>BP (mmHg)</label>
+              <input type="text" id="inputBP" value="100/70" oninput="syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>Pulse (bpm)</label>
+              <input type="text" id="inputPulse" value="88" oninput="syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>Height (cm)</label>
+              <input type="text" id="inputHeight" value="159" oninput="autoCalculateBMI(); syncPreview()">
+            </div>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>Weight (kg)</label>
+              <input type="text" id="inputWeight" value="66.60" oninput="autoCalculateBMI(); syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>BMI (Kg/m²)</label>
+              <input type="text" id="inputBMI" value="26.34" oninput="syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>Waist (cm)</label>
+              <input type="text" id="inputWaist" value="100" oninput="autoCalculateWaistHip(); syncPreview()">
+            </div>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>Hip (cm)</label>
+              <input type="text" id="inputHip" value="96" oninput="autoCalculateWaistHip(); syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>Waist/Hip</label>
+              <input type="text" id="inputWaistHip" value="1.04" oninput="syncPreview()">
+            </div>
+            <div class="form-group">
+              <label>RBS (mg/dL)</label>
+              <input type="text" id="inputRBS" value="140" oninput="syncPreview()">
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>HbA1c (%)</label>
+              <input type="text" id="inputHbA1c" value="6.3" oninput="syncPreview()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Investigation / Lab History -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-title">🧪 Lab Reports / History</span>
+          </div>
+          <div class="form-group">
+            <label>Lab Report Lines (one per line, format: [Date] Test1 :val, Test2 :val)</label>
+            <textarea id="inputLabs" rows="4" oninput="syncPreview()">[02-Oct-2025] Urine Albumin :15.89 mg/L , Urine Creatinine :54.43 mg/dL , Spot Albumin Creatinine Ratio :29.7 mg/g
+[07-Sep-2026] Haemoglobin (Hb) :13.2 Gms % , Total WBC Count :9120 Cells/cu mm , Haematocrit (PCV) :39.1 % , Neutrophils :62 % , Lymphocytes :26 % , Eosinophils :02 % , Monocytes :10 % , Basophils :00 %</textarea>
+          </div>
+        </div>
+
+        <!-- Clinical Diagnosis -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-title">📋 Clinical Diagnosis</span>
+          </div>
+          <div class="form-group">
+            <textarea id="inputDiagnosis" rows="2" oninput="syncPreview()">DIABETES MELLITUS TYPE 2 since 26.1 Years , HYPERTENSION since 16.1 Years , DYSLIPIDEMIA since 16.1 Years</textarea>
+          </div>
+        </div>
+
+        <!-- Prescribed Medications Section -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-title">💊 Prescribed Medicines (Rx)</span>
+            <button class="btn btn-sm btn-primary" onclick="addNewMedicine()">+ Add Drug</button>
+          </div>
+
+          <div id="medicinesEditorList">
+            <!-- Dynamic Medicine Cards inserted via JS -->
+          </div>
+
+          <button class="btn btn-outline btn-sm" style="width: 100%; margin-top: 6px;" onclick="addNewMedicine()">
+            + Add Another Medicine
+          </button>
+        </div>
+
+        <!-- Next Visit & Footer Notes -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-title">📅 Next Visit & Follow Up</span>
+          </div>
+          <div class="form-group">
+            <label>Next Visit Text</label>
+            <input type="text" id="inputNextVisit" value="25-Jan-2027 - Monday" oninput="syncPreview()">
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+            <button class="btn btn-outline btn-sm" onclick="setNextVisitDays(7)">+7 Days</button>
+            <button class="btn btn-outline btn-sm" onclick="setNextVisitDays(15)">+15 Days</button>
+            <button class="btn btn-outline btn-sm" onclick="setNextVisitDays(30)">+1 Month</button>
+            <button class="btn btn-outline btn-sm" onclick="setNextVisitDays(90)">+90 Days</button>
+          </div>
+          <div class="form-group">
+            <label>Footer Promotional / App Note</label>
+            <input type="text" id="inputFooterPromo" value="Download HealthPlix App from Google Play/Apple Appstore to view all your prescriptions" oninput="syncPreview()">
+          </div>
+          <div class="form-group">
+            <label>Bottom EMR Credit</label>
+            <input type="text" id="inputFooterCredit" value="Powered by HealthPlix EMR. www.healthplix.com" oninput="syncPreview()">
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Right Live Prescription Preview -->
+    <main class="preview-panel">
+      <div class="preview-toolbar">
+        <div class="preview-hint">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span><strong>Direct Click & Edit:</strong> You can edit any field in the left panel OR click directly on any text on the sheet below to edit!</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-upload-magic btn-sm" onclick="openUploadModal()">
+            ⚡ Auto-Fill from Text
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="window.print()">
+            🖨️ Print / Save PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- THE PRINTABLE A4 PRESCRIPTION SHEET -->
+      <div class="rx-paper" id="prescriptionSheet">
+        
+        <!-- Header -->
+        <div class="rx-header">
+          <!-- Logo & Clinic Title -->
+          <div class="rx-clinic-logo">
+            <div class="logo-container" id="logoDisplayBox">
+              <!-- Default Vector Logo matching AHC Diabetes Clinic -->
+              <svg class="logo-svg" viewBox="0 0 260 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer Cyan / Blue Crescent -->
+                <path d="M 55 10 C 25 18, 5 44, 5 75 C 5 95, 20 105, 38 105 C 56 105, 68 95, 78 80 C 88 65, 95 40, 95 25 C 80 12, 68 10, 55 10 Z" fill="#0284c7" />
+                <path d="M 52 18 C 32 24, 18 46, 18 72 C 18 86, 28 95, 40 95 C 52 95, 62 85, 70 72 C 78 58, 82 38, 80 25 C 70 19, 60 18, 52 18 Z" fill="#ffffff" />
+                <!-- Inner Orange Pulse / Stethoscope Peak -->
+                <path d="M 22 75 L 35 75 L 42 55 L 49 85 L 56 68 L 62 75 L 75 75" stroke="#f97316" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <!-- Center Plus / Cross symbol -->
+                <path d="M 49 32 L 49 46 M 42 39 L 56 39" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round" />
+                <!-- Clinic Text Branding -->
+                <text x="108" y="42" font-family="'Inter', Arial, sans-serif" font-size="20" font-weight="900" fill="#0284c7" letter-spacing="1">AHC</text>
+                <text x="108" y="64" font-family="'Inter', Arial, sans-serif" font-size="16" font-weight="700" fill="#0284c7">Diabetes</text>
+                <text x="108" y="85" font-family="'Inter', Arial, sans-serif" font-size="16" font-weight="700" fill="#0284c7">Clinic</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Doctor Credentials -->
+          <div class="rx-doctor-info">
+            <div class="rx-doctor-name" id="viewDoctorName" contenteditable="true" onblur="syncBack('inputDoctorName', this.textContent)">Dr. Rutul A. Gokalani (Thakkar)</div>
+            <div class="rx-doctor-degrees" id="viewQualifications" contenteditable="true" onblur="syncBackQuals(this)">
+              <div>M.D. (Physician) FID (Fellow in Diabetes)</div>
+              <div>Apollo Hospitals & Liverpool, U.K.</div>
+              <div>PG Diploma in Diabetes, Middlesex Uni. U.K.</div>
+              <div>PG Diploma in Diabetes & Complications, EASD, Czech Republic</div>
+              <div>PG Diploma in Diabetes & Technology (Greece)</div>
+              <div>Certified in Diabetology (RSSDI)</div>
+              <div>CCGDM, CCMTD, CCDR, CCGDM (PHFI)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Patient Info Strip -->
+        <div class="rx-patient-bar">
+          <div class="rx-patient-row-1">
+            <div>
+              <span id="viewPatientId" contenteditable="true" onblur="syncBack('inputPatientId', this.textContent)">5224</span>
+              <span> : </span>
+              <span id="viewPatientName" contenteditable="true" onblur="syncBack('inputPatientName', this.textContent)">Mr. Nigam Parikh</span>
+              <span> (</span><span id="viewAge" contenteditable="true" onblur="syncBack('inputAge', this.textContent)">74y</span><span>, </span><span id="viewGender" contenteditable="true">Male</span><span>, </span><span id="viewBloodGroup" contenteditable="true" onblur="syncBack('inputBloodGroup', this.textContent)">B+ve</span><span>) - </span>
+              <span id="viewPhone" contenteditable="true" onblur="syncBack('inputPhone', this.textContent)">9426638923</span>
+            </div>
+          </div>
+          <div class="rx-patient-row-2">
+            <div>
+              <span style="font-weight: 700;">Date & Time</span>
+              <span> : </span>
+              <span id="viewDateTime" contenteditable="true" onblur="syncBack('inputDateTime', this.textContent)">27-Oct-2026 05:37 PM</span>
+            </div>
+          </div>
+          <div class="rx-patient-row-2">
+            <div>
+              <span style="font-weight: 700;">Ref. by</span>
+              <span> : </span>
+              <span id="viewRefBy" contenteditable="true" onblur="syncBack('inputRefBy', this.textContent)">Dr. Google</span>
+            </div>
+          </div>
+          <hr class="rx-patient-divider">
+        </div>
+
+        <!-- Vitals Strip -->
+        <div class="rx-vitals" id="viewVitals">
+          <span>BP <strong id="vBP" contenteditable="true" onblur="syncBack('inputBP', this.textContent)">100/70</strong> mmHg</span><span class="sep">|</span>
+          <span>Pulse <strong id="vPulse" contenteditable="true" onblur="syncBack('inputPulse', this.textContent)">88</strong> bpm</span><span class="sep">|</span>
+          <span>Height <strong id="vHeight" contenteditable="true" onblur="syncBack('inputHeight', this.textContent); autoCalculateBMI()">159</strong> cm</span><span class="sep">|</span>
+          <span>Weight <strong id="vWeight" contenteditable="true" onblur="syncBack('inputWeight', this.textContent); autoCalculateBMI()">66.60</strong> kg</span><span class="sep">|</span>
+          <span>BMI <strong id="vBMI" contenteditable="true" onblur="syncBack('inputBMI', this.textContent)">26.34</strong> Kg/m2</span><span class="sep">|</span>
+          <span>Waist <strong id="vWaist" contenteditable="true" onblur="syncBack('inputWaist', this.textContent); autoCalculateWaistHip()">100</strong> cm</span><span class="sep">|</span>
+          <span>Hip <strong id="vHip" contenteditable="true" onblur="syncBack('inputHip', this.textContent); autoCalculateWaistHip()">96</strong> cm</span><span class="sep">|</span>
+          <span>Waist/Hip <strong id="vWaistHip" contenteditable="true" onblur="syncBack('inputWaistHip', this.textContent)">1.04</strong></span><span class="sep">|</span>
+          <span>RBS <strong id="vRBS" contenteditable="true" onblur="syncBack('inputRBS', this.textContent)">140</strong> mg/dL</span><span class="sep">|</span>
+          <span>HbA1c <strong id="vHbA1c" contenteditable="true" onblur="syncBack('inputHbA1c', this.textContent)">6.3</strong> %</span>
+        </div>
+
+        <!-- Lab Reports History -->
+        <div class="rx-labs" id="viewLabs" contenteditable="true" onblur="syncBackLabs(this)">
+          <!-- Populated from inputLabs -->
+        </div>
+
+        <!-- Diagnosis Line -->
+        <div class="rx-diagnosis">
+          <span>Diagnosis: </span>
+          <span id="viewDiagnosis" contenteditable="true" onblur="syncBack('inputDiagnosis', this.textContent)">DIABETES MELLITUS TYPE 2 since 26.1 Years , HYPERTENSION since 16.1 Years , DYSLIPIDEMIA since 16.1 Years</span>
+        </div>
+
+        <!-- Rx Symbol -->
+        <div class="rx-symbol">℞</div>
+
+        <!-- Medicine Table -->
+        <table class="rx-table">
+          <thead>
+            <tr>
+              <th style="padding-left: 2px;">Medicine</th>
+              <th class="col-dosage">Dosage</th>
+              <th class="col-timing">Timing - Freq. - Duration</th>
+              <th class="col-qty">Qty</th>
+            </tr>
+          </thead>
+          <tbody id="viewMedicineTableBody">
+            <!-- Dynamic Medicine Rows -->
+          </tbody>
+        </table>
+
+        <!-- Next Visit Line -->
+        <div class="rx-next-visit">
+          <span>Next Visit : </span><span id="viewNextVisit" contenteditable="true" onblur="syncBack('inputNextVisit', this.textContent)">25-Jan-2027 - Monday</span>
+        </div>
+
+        <!-- Prescription Sheet Footer -->
+        <div class="rx-paper-footer">
+          <div class="rx-signature-row">
+            <div class="rx-qr-promo">
+              <!-- Exact QR Code replica -->
+              <svg class="rx-qr-code" viewBox="0 0 100 100" fill="#000">
+                <rect width="100" height="100" fill="#fff"/>
+                <!-- Corner 1 -->
+                <rect x="10" y="10" width="26" height="26" fill="#000"/>
+                <rect x="14" y="14" width="18" height="18" fill="#fff"/>
+                <rect x="18" y="18" width="10" height="10" fill="#000"/>
+                <!-- Corner 2 -->
+                <rect x="64" y="10" width="26" height="26" fill="#000"/>
+                <rect x="68" y="14" width="18" height="18" fill="#fff"/>
+                <rect x="72" y="18" width="10" height="10" fill="#000"/>
+                <!-- Corner 3 -->
+                <rect x="10" y="64" width="26" height="26" fill="#000"/>
+                <rect x="14" y="68" width="18" height="18" fill="#fff"/>
+                <rect x="18" y="72" width="10" height="10" fill="#000"/>
+                <!-- Data pattern -->
+                <rect x="42" y="12" width="6" height="6" fill="#000"/>
+                <rect x="52" y="12" width="6" height="6" fill="#000"/>
+                <rect x="42" y="24" width="6" height="6" fill="#000"/>
+                <rect x="48" y="32" width="6" height="6" fill="#000"/>
+                <rect x="12" y="44" width="6" height="6" fill="#000"/>
+                <rect x="24" y="44" width="6" height="6" fill="#000"/>
+                <rect x="36" y="44" width="6" height="6" fill="#000"/>
+                <rect x="48" y="44" width="6" height="6" fill="#000"/>
+                <rect x="60" y="44" width="6" height="6" fill="#000"/>
+                <rect x="72" y="44" width="6" height="6" fill="#000"/>
+                <rect x="84" y="44" width="6" height="6" fill="#000"/>
+                <rect x="42" y="56" width="6" height="6" fill="#000"/>
+                <rect x="54" y="56" width="6" height="6" fill="#000"/>
+                <rect x="68" y="56" width="6" height="6" fill="#000"/>
+                <rect x="42" y="68" width="6" height="6" fill="#000"/>
+                <rect x="54" y="68" width="6" height="6" fill="#000"/>
+                <rect x="68" y="68" width="6" height="6" fill="#000"/>
+                <rect x="80" y="68" width="6" height="6" fill="#000"/>
+                <rect x="48" y="80" width="6" height="6" fill="#000"/>
+                <rect x="60" y="80" width="6" height="6" fill="#000"/>
+                <rect x="72" y="80" width="6" height="6" fill="#000"/>
+                <rect x="84" y="80" width="6" height="6" fill="#000"/>
+              </svg>
+              <div class="rx-qr-text" id="viewFooterPromo" contenteditable="true" onblur="syncBack('inputFooterPromo', this.textContent)">
+                Download HealthPlix App from Google Play/Apple Appstore to view all your prescriptions
+              </div>
+            </div>
+            <div class="rx-signature-box">
+              <div class="signature-canvas-container" id="signatureBox"></div>
+              <div class="rx-doctor-sign-name" id="viewSignName" contenteditable="true" onblur="syncBack('inputSignName', this.textContent)">
+                Dr Rutul Gokalani
+              </div>
+            </div>
+          </div>
+          <div class="rx-system-footer" id="viewFooterCredit" contenteditable="true" onblur="syncBack('inputFooterCredit', this.textContent)">
+            Powered by HealthPlix EMR. www.healthplix.com
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Upload / Paste Text Modal Dialog -->
+  <div class="modal-overlay" id="uploadModal" onclick="handleModalOverlayClick(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>⚡ Auto-Fill Prescription from Text File</span>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="closeUploadModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Drag & Drop Zone -->
+        <div class="dropzone" id="modalDropzone" onclick="document.getElementById('modalFileInput').click()">
+          <input type="file" id="modalFileInput" accept=".txt,.text,.json,.csv,.log,.md" style="display: none;" onchange="handleModalFileSelect(event)">
+          <div class="dropzone-icon">📄</div>
+          <div class="dropzone-text">Click to browse or Drag & Drop your .txt file here</div>
+          <div class="dropzone-sub">Supports prescription text files, EMR exports, OCR text, or clinical summaries</div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin: 4px 0;">
+          <div style="flex: 1; height: 1px; background: #334155;"></div>
+          <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase;">OR PASTE TEXT DIRECTLY</span>
+          <div style="flex: 1; height: 1px; background: #334155;"></div>
+        </div>
+
+        <!-- Raw Textarea -->
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Paste Prescription Text Below:</label>
+          <textarea id="modalPasteArea" rows="9" placeholder="Paste your prescription text here (e.g. copied from PDF, OCR, WhatsApp, or notes)..."></textarea>
+        </div>
+
+        <!-- Scanning progress status -->
+        <div class="scan-status-box" id="scanStatusBox">
+          <div class="spinner"></div>
+          <div style="font-weight: 700; color: #38bdf8; font-size: 0.9rem;" id="scanStatusTitle">Parsing prescription text...</div>
+          <div style="font-size: 0.78rem; color: #cbd5e1; margin-top: 4px;" id="scanStatusSub">Extracting patient details, vitals, and medications...</div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm" onclick="loadSampleTextIntoModal()">
+          📋 Insert Sample Text
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="closeUploadModal()">Cancel</button>
+          <button class="btn btn-upload-magic" onclick="processModalText()">
+            ⚡ Parse & Auto-Fill Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    // Medicine database
+    let medicines = [];
+
+    const defaultSampleMedicines = [
+      {
+        id: 1,
+        name: "LIFESTYLE MODIFICATION",
+        dosage: "",
+        timing: "",
+        freq: "",
+        duration: "90 Days",
+        qty: "",
+        composition: "",
+        notes: ""
+      },
+      {
+        id: 2,
+        name: "TAB. GLIZID M XR 60 MG",
+        dosage: "1 – 0 – 0.5",
+        timing: "Before Breakfast",
+        freq: "daily",
+        duration: "90 Days",
+        qty: "135",
+        composition: "Gliclazide 60 MG + Metformin 500 MG",
+        notes: "DIABETES"
+      },
+      {
+        id: 3,
+        name: "TAB. EMPHA L (25/5)",
+        dosage: "1 – 0 – 0",
+        timing: "Before Breakfast",
+        freq: "daily",
+        duration: "90 Days",
+        qty: "90",
+        composition: "EMPAGLIFLOZIN 25 MG/LINAGLIPTIN 5 MG)",
+        notes: "DIABETES"
+      },
+      {
+        id: 4,
+        name: "TAB. IMEGLYN SR 1000",
+        dosage: "1 – 0 – 1",
+        timing: "After Food",
+        freq: "daily",
+        duration: "90 Days",
+        qty: "180",
+        composition: "Imeglimin Hydrochloride 1000 MG",
+        notes: "DIABETES"
+      },
+      {
+        id: 5,
+        name: "TAB. TELMIKIND BETA 25MG",
+        dosage: "1 – 0 – 0",
+        timing: "After Breakfast",
+        freq: "daily",
+        duration: "90 Days",
+        qty: "90",
+        composition: "Metoprolol 25 MG + Telmisartan 40 MG",
+        notes: "BP"
+      },
+      {
+        id: 6,
+        name: "CAP. NOVASTAT CV 10MG 10'S",
+        dosage: "0 – 0 – 1",
+        timing: "After Food",
+        freq: "daily",
+        duration: "90 Days",
+        qty: "90",
+        composition: "Clopidogrel 75 MG + Rosuvastatin 10 MG",
+        notes: ""
+      },
+      {
+        id: 7,
+        name: "TAB. MYMI D",
+        dosage: "0 – 1 – 0",
+        timing: "After Food",
+        freq: "daily",
+        duration: "90 Days",
+        qty: "90",
+        composition: "Alpha lipoic acid 100 MG + Folic acid 1.5 MG + Mecobalamin 1500 MCG + Vitamin B1 10 MG...",
+        notes: "MULTIVITAMINS"
+      }
+    ];
+
+    // ==========================================
+    // INTELLIGENT PRESCRIPTION TEXT PARSER
+    // ==========================================
+    function parsePrescriptionRawText(rawText) {
+      if (!rawText || !rawText.trim()) return null;
+
+      const normalized = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      const lines = normalized.split('\n').map(l => l.trim()).filter(Boolean);
+
+      const result = {
+        patientId: '',
+        patientName: '',
+        age: '',
+        gender: '',
+        bloodGroup: '',
+        phone: '',
+        dateTime: '',
+        refBy: '',
+        bp: '',
+        pulse: '',
+        height: '',
+        weight: '',
+        bmi: '',
+        waist: '',
+        hip: '',
+        waistHip: '',
+        rbs: '',
+        hba1c: '',
+        labs: [],
+        diagnosis: '',
+        medicines: [],
+        nextVisit: '',
+        doctorName: '',
+        doctorSign: ''
+      };
+
+      // 1. Patient Header Row: e.g. "5224 : Mr. Nigam Parikh (74y, Male, B+ve) - 9426638923"
+      const patientLineRegex = /^(\d+)\s*:\s*(.*?)\s*\((.*?)\)\s*(?:-\s*(\d{7,12}))?$/i;
+      
+      for (const line of lines) {
+        // Match line like "5224 : Mr. Nigam Parikh (74y, Male, B+ve) - 9426638923"
+        const pMatch = line.match(patientLineRegex);
+        if (pMatch) {
+          result.patientId = pMatch[1].trim();
+          result.patientName = pMatch[2].trim();
+          if (pMatch[4]) result.phone = pMatch[4].trim();
+
+          // Inside parentheses: "74y, Male, B+ve"
+          const demog = pMatch[3].split(',').map(s => s.trim());
+          for (const item of demog) {
+            if (/\d+\s*y(?:ears?)?/i.test(item)) {
+              result.age = item;
+            } else if (/^(male|female|other|m|f)$/i.test(item)) {
+              if (/^m$/i.test(item)) result.gender = "Male";
+              else if (/^f$/i.test(item)) result.gender = "Female";
+              else result.gender = item.charAt(0).toUpperCase() + item.slice(1).toLowerCase();
+            } else if (/[\+\-](?:ve)?$/i.test(item) || /^(A|B|AB|O)[\+\-]?/i.test(item)) {
+              result.bloodGroup = item;
+            }
+          }
+        }
+      }
+
+      // Alternative key-value search for patient fields if not parsed in one-liner
+      if (!result.patientName) {
+        const nameMatch = normalized.match(/(?:Patient\s*Name|Name|Pt)\s*:\s*([^\n\r,]+)/i);
+        if (nameMatch) result.patientName = nameMatch[1].trim();
+      }
+      if (!result.patientId) {
+        const idMatch = normalized.match(/(?:Reg(?:\.|\s*No)?|UHID|Patient\s*ID|ID)\s*:\s*([^\n\r,]+)/i);
+        if (idMatch) result.patientId = idMatch[1].trim();
+      }
+      if (!result.age) {
+        const ageMatch = normalized.match(/\bAge\s*:\s*(\d+\s*y(?:ears?)?|\d+)/i) || normalized.match(/\b(\d+)\s*y(?:ears?|\/|\b)/i);
+        if (ageMatch) result.age = ageMatch[1].includes('y') ? ageMatch[1] : ageMatch[1] + 'y';
+      }
+      if (!result.gender) {
+        const sexMatch = normalized.match(/\b(?:Gender|Sex)\s*:\s*(Male|Female|Other|M|F)\b/i);
+        if (sexMatch) {
+          const g = sexMatch[1];
+          result.gender = /^m/i.test(g) ? "Male" : /^f/i.test(g) ? "Female" : "Other";
+        }
+      }
+      if (!result.phone) {
+        const phoneMatch = normalized.match(/\b(?:Phone|Mobile|Contact|Tel)?\s*:?\s*(\d{10})\b/i);
+        if (phoneMatch) result.phone = phoneMatch[1];
+      }
+
+      // 2. Date & Time
+      const dateMatch = normalized.match(/(?:Date\s*&\s*Time|Date|Prescription\s*Date)\s*:\s*([^\n\r]+)/i);
+      if (dateMatch) {
+        result.dateTime = dateMatch[1].trim();
+      }
+
+      // 3. Ref by
+      const refMatch = normalized.match(/Ref(?:\.|\s*by)?\s*:\s*([^\n\r]+)/i);
+      if (refMatch) {
+        result.refBy = refMatch[1].trim();
+      }
+
+      // 4. Vitals & Measurements
+      // BP
+      const bpMatch = normalized.match(/\bBP\s*:?\s*([\d]{2,3}\/[\d]{2,3})\s*(?:mmHg)?\b/i);
+      if (bpMatch) result.bp = bpMatch[1].trim();
+
+      // Pulse
+      const pulseMatch = normalized.match(/\bPulse\s*:?\s*(\d{2,3})\s*(?:bpm)?\b/i);
+      if (pulseMatch) result.pulse = pulseMatch[1].trim();
+
+      // Height
+      const heightMatch = normalized.match(/\bHeight\s*:?\s*(\d{2,3}(?:\.\d+)?)\s*(?:cm)?\b/i);
+      if (heightMatch) result.height = heightMatch[1].trim();
+
+      // Weight
+      const weightMatch = normalized.match(/\bWeight\s*:?\s*(\d{2,3}(?:\.\d+)?)\s*(?:kg)?\b/i);
+      if (weightMatch) result.weight = weightMatch[1].trim();
+
+      // BMI
+      const bmiMatch = normalized.match(/\bBMI\s*:?\s*(\d{2,3}(?:\.\d+)?)\s*(?:Kg\/m2|kg\/m²)?\b/i);
+      if (bmiMatch) result.bmi = bmiMatch[1].trim();
+
+      // Waist
+      const waistMatch = normalized.match(/\bWaist\s*:?\s*(\d{2,3}(?:\.\d+)?)\s*(?:cm)?\b/i);
+      if (waistMatch) result.waist = waistMatch[1].trim();
+
+      // Hip
+      const hipMatch = normalized.match(/\bHip\s*:?\s*(\d{2,3}(?:\.\d+)?)\s*(?:cm)?\b/i);
+      if (hipMatch) result.hip = hipMatch[1].trim();
+
+      // Waist/Hip
+      const whMatch = normalized.match(/\bWaist\/Hip\s*:?\s*(\d+(?:\.\d+)?)\b/i);
+      if (whMatch) result.waistHip = whMatch[1].trim();
+
+      // RBS
+      const rbsMatch = normalized.match(/\bRBS\s*:?\s*(\d{2,3}(?:\.\d+)?)\s*(?:mg\/dL)?\b/i);
+      if (rbsMatch) result.rbs = rbsMatch[1].trim();
+
+      // HbA1c
+      const hba1cMatch = normalized.match(/\bHbA1c\s*:?\s*(\d+(?:\.\d+)?)\s*%/i);
+      if (hba1cMatch) result.hba1c = hba1cMatch[1].trim();
+
+      // 5. Labs / Investigation History
+      // Lines starting with [Date] e.g. "[02-Oct-2025] Urine Albumin..."
+      lines.forEach(l => {
+        if (/^\[\d{1,2}-[A-Za-z]{3}-\d{4}\]/.test(l) || /^(haemoglobin|urine\s*albumin|wbc|blood\s*sugar)/i.test(l)) {
+          result.labs.push(l);
+        }
+      });
+
+      // 6. Diagnosis
+      const diagMatch = normalized.match(/Diagnosis\s*:\s*([^\n\r]+(?:\n(?!\s*(?:Medicine|Rx|\d+[\.\)]))[^\n\r]+)*)/i);
+      if (diagMatch) {
+        result.diagnosis = diagMatch[1].replace(/\n/g, ' ').trim();
+      }
+
+      // 7. Medicines / Rx Table
+      // Look for numbered entries e.g. "1) ...", "2) ...", or lines starting with TAB./CAP./SYP./INJ.
+      let currentMed = null;
+      let inMedSection = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        if (/^Medicine\s+Dosage/i.test(line) || /^Rx\b/i.test(line)) {
+          inMedSection = true;
+          continue;
+        }
+        if (/^Next\s*Visit/i.test(line) || /^Dr\s+[A-Z]/i.test(line) || /^Download\s+HealthPlix/i.test(line) || /^Powered\s+by/i.test(line)) {
+          inMedSection = false;
+        }
+
+        // Check if line starts a medicine: "1) ...", "1. ...", or "TAB. ...", "CAP. ..."
+        const medLineMatch = line.match(/^(\d+)[\.\)]\s*(.*)/i);
+        if (medLineMatch) {
+          let content = medLineMatch[2].trim();
+
+          // 1. Check Quantity at end: e.g. " 135", " 90", " 180"
+          let qty = '';
+          const qMatch = content.match(/\s+(\d+)$/);
+          if (qMatch) {
+            qty = qMatch[1];
+            content = content.substring(0, qMatch.index).trim();
+          }
+
+          // 2. Check Dosage: pattern like "1 – 0 – 0.5" or "1 - 0 - 1" or "0 – 0 – 1" or "1-0-0"
+          let dosage = '';
+          let name = '';
+          let timingStr = '';
+
+          const doseMatch = content.match(/(\d+(?:\.\d+)?\s*[–\-]\s*\d+(?:\.\d+)?(?:\s*[–\-]\s*\d+(?:\.\d+)?)?)/);
+          if (doseMatch) {
+            dosage = doseMatch[1].trim();
+            name = content.substring(0, doseMatch.index).trim();
+            timingStr = content.substring(doseMatch.index + doseMatch[0].length).trim();
+          } else {
+            // E.g. "LIFESTYLE MODIFICATION - 90 Days"
+            if (content.includes(' - ')) {
+              const parts = content.split(' - ');
+              name = parts[0].trim();
+              timingStr = parts.slice(1).join(' - ').trim();
+            } else {
+              name = content;
+            }
+          }
+
+          // 3. Extract Duration e.g. "90 Days", "30 Days", "1 Month"
+          let duration = '';
+          const durMatch = timingStr.match(/(\d+\s*(?:Days?|Weeks?|Months?))/i);
+          if (durMatch) {
+            duration = durMatch[1];
+            timingStr = (timingStr.substring(0, durMatch.index) + timingStr.substring(durMatch.index + durMatch[0].length)).trim();
+          }
+
+          // 4. Extract Frequency e.g. "daily", "alternate days", "twice daily"
+          let freq = '';
+          if (/\bdaily\b/i.test(timingStr)) {
+            freq = 'daily';
+            timingStr = timingStr.replace(/\bdaily\b/gi, '').trim();
+          } else if (/\balternate\s*days?\b/i.test(timingStr)) {
+            freq = 'alternate days';
+            timingStr = timingStr.replace(/\balternate\s*days?\b/gi, '').trim();
+          }
+
+          // 5. Clean remaining Timing
+          let timing = timingStr.replace(/^[\s\-\–]+|[\s\-\–]+$/g, '').trim();
+
+          currentMed = {
+            id: result.medicines.length + 1,
+            name: name,
+            dosage: dosage,
+            timing: timing,
+            freq: freq,
+            duration: duration,
+            qty: qty,
+            composition: '',
+            notes: ''
+          };
+          result.medicines.push(currentMed);
+
+        } else if (currentMed && /^Composition\s*:\s*(.*)/i.test(line)) {
+          currentMed.composition = line.replace(/^Composition\s*:\s*/i, '').trim();
+        } else if (currentMed && /^Notes\s*:\s*(.*)/i.test(line)) {
+          currentMed.notes = line.replace(/^Notes\s*:\s*/i, '').trim();
+        }
+      }
+
+      // 8. Next Visit
+      const nextMatch = normalized.match(/Next\s*Visit\s*:\s*([^\n\r]+)/i);
+      if (nextMatch) {
+        result.nextVisit = nextMatch[1].trim();
+      }
+
+      // 9. Doctor Signature Name
+      const docMatch = normalized.match(/(?:Dr\s+[A-Za-z\s\.]+)/);
+      if (docMatch) {
+        result.doctorSign = docMatch[0].trim();
+      }
+
+      return result;
+    }
+
+    // Apply parsed object to all UI inputs and preview sheet
+    function applyParsedPrescription(data) {
+      if (!data) return;
+
+      if (data.patientId) document.getElementById('inputPatientId').value = data.patientId;
+      if (data.patientName) document.getElementById('inputPatientName').value = data.patientName;
+      if (data.age) document.getElementById('inputAge').value = data.age;
+      if (data.gender) document.getElementById('inputGender').value = data.gender;
+      if (data.bloodGroup) document.getElementById('inputBloodGroup').value = data.bloodGroup;
+      if (data.phone) document.getElementById('inputPhone').value = data.phone;
+      if (data.dateTime) document.getElementById('inputDateTime').value = data.dateTime;
+      if (data.refBy) document.getElementById('inputRefBy').value = data.refBy;
+
+      if (data.bp) document.getElementById('inputBP').value = data.bp;
+      if (data.pulse) document.getElementById('inputPulse').value = data.pulse;
+      if (data.height) document.getElementById('inputHeight').value = data.height;
+      if (data.weight) document.getElementById('inputWeight').value = data.weight;
+      if (data.bmi) document.getElementById('inputBMI').value = data.bmi;
+      if (data.waist) document.getElementById('inputWaist').value = data.waist;
+      if (data.hip) document.getElementById('inputHip').value = data.hip;
+      if (data.waistHip) document.getElementById('inputWaistHip').value = data.waistHip;
+      if (data.rbs) document.getElementById('inputRBS').value = data.rbs;
+      if (data.hba1c) document.getElementById('inputHbA1c').value = data.hba1c;
+
+      if (data.labs && data.labs.length > 0) {
+        document.getElementById('inputLabs').value = data.labs.join('\n');
+      }
+      if (data.diagnosis) {
+        document.getElementById('inputDiagnosis').value = data.diagnosis;
+      }
+      if (data.nextVisit) {
+        document.getElementById('inputNextVisit').value = data.nextVisit;
+      }
+
+      if (data.medicines && data.medicines.length > 0) {
+        medicines = data.medicines;
+      }
+
+      // Auto calculate BMI if height & weight available but BMI empty
+      if (data.height && data.weight && !data.bmi) {
+        autoCalculateBMI();
+      }
+      if (data.waist && data.hip && !data.waistHip) {
+        autoCalculateWaistHip();
+      }
+
+      renderMedicinesEditor();
+      syncPreview();
+    }
+
+    // Modal Operations
+    function openUploadModal() {
+      document.getElementById('uploadModal').style.display = 'flex';
+      document.getElementById('scanStatusBox').style.display = 'none';
+      document.getElementById('modalPasteArea').focus();
+    }
+
+    function closeUploadModal() {
+      document.getElementById('uploadModal').style.display = 'none';
+    }
+
+    function handleModalOverlayClick(e) {
+      if (e.target.id === 'uploadModal') {
+        closeUploadModal();
+      }
+    }
+
+    function handleModalFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      readTextFileAndFill(file);
+    }
+
+    function handleDirectFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      readTextFileAndFill(file);
+    }
+
+    // Drag and drop setup for modal dropzone
+    const dropzone = document.getElementById('modalDropzone');
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.add('dragover');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove('dragover');
+      }, false);
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files.length > 0) {
+        readTextFileAndFill(files[0]);
+      }
+    });
+
+    function readTextFileAndFill(file) {
+      const reader = new FileReader();
+      
+      // Show scan animation
+      const scanBox = document.getElementById('scanStatusBox');
+      scanBox.style.display = 'block';
+      document.getElementById('scanStatusTitle').textContent = `Reading ${file.name}...`;
+      document.getElementById('scanStatusSub').textContent = 'Analyzing and extracting prescription details...';
+
+      reader.onload = function(evt) {
+        const textContent = evt.target.result;
+        document.getElementById('modalPasteArea').value = textContent;
+
+        setTimeout(() => {
+          const parsed = parsePrescriptionRawText(textContent);
+          if (parsed) {
+            applyParsedPrescription(parsed);
+            closeUploadModal();
+            showToast(`✅ Successfully parsed & auto-filled from ${file.name}! (${parsed.medicines.length} medicines extracted)`);
+          } else {
+            alert("Could not extract details. Please ensure the file contains prescription text.");
+            scanBox.style.display = 'none';
+          }
+        }, 600);
+      };
+
+      reader.readAsText(file);
+    }
+
+    function processModalText() {
+      const text = document.getElementById('modalPasteArea').value;
+      if (!text.trim()) {
+        alert("Please paste some prescription text or select a file first.");
+        return;
+      }
+
+      const scanBox = document.getElementById('scanStatusBox');
+      scanBox.style.display = 'block';
+      document.getElementById('scanStatusTitle').textContent = "Processing text...";
+      document.getElementById('scanStatusSub').textContent = "Extracting patient information, vitals, labs, and medicines...";
+
+      setTimeout(() => {
+        const parsed = parsePrescriptionRawText(text);
+        if (parsed) {
+          applyParsedPrescription(parsed);
+          closeUploadModal();
+          showToast(`✅ Auto-filled prescription! (${parsed.medicines.length} medications detected)`);
+        } else {
+          alert("Could not parse text. Please check the text format.");
+          scanBox.style.display = 'none';
+        }
+      }, 500);
+    }
+
+    function loadSampleTextIntoModal() {
+      const sampleText = `5224 : Mr. Nigam Parikh (74y, Male, B+ve) - 9426638923
+Date & Time : 27-Oct-2026 05:37 PM
+Ref. by : Dr. Google
+BP 100/70 mmHg| Pulse 88 bpm| Height 159 cm| Weight 66.60 kg| BMI 26.34 Kg/m2| Waist 100 cm| Hip 96 cm| 
+Waist/Hip 1.04 | RBS 140 mg/dL| HbA1c 6.3 % 
+[02-Oct-2025] Urine Albumin :15.89 mg/L , Urine Creatinine :54.43 mg/dL , Spot Albumin Creatinine Ratio :29.7 mg/g 
+[07-Sep-2026] Haemoglobin (Hb) :13.2 Gms % , Total WBC Count :9120 Cells/cu mm , Haematocrit (PCV) :39.1 % , Neutrophils :62 % , 
+Lymphocytes :26 % , Eosinophils :02 % , Monocytes :10 % , Basophils :00 % 
+Diagnosis: DIABETES MELLITUS TYPE 2 since 26.1 Years , HYPERTENSION since 16.1 Years , DYSLIPIDEMIA since 16.1 Years 
+Medicine Dosage Timing - Freq. - Duration Qty 
+1) LIFESTYLE MODIFICATION - 90 Days
+2) TAB. GLIZID M XR 60 MG 1 – 0 – 0.5 Before Breakfast - daily - 90 Days 135
+Composition : Gliclazide 60 MG + Metformin 500 MG 
+Notes : DIABETES 
+3) TAB. EMPHA L (25/5) 1 – 0 – 0 Before Breakfast - daily - 90 Days 90
+Composition : EMPAGLIFLOZIN 25 MG/LINAGLIPTIN 5 MG) 
+Notes : DIABETES 
+4) TAB. IMEGLYN SR 1000 1 – 0 – 1 After Food - daily - 90 Days 180
+Composition : Imeglimin Hydrochloride 1000 MG 
+Notes : DIABETES 
+5) TAB. TELMIKIND BETA 25MG 1 – 0 – 0 After Breakfast - daily - 90 Days 90
+Composition : Metoprolol 25 MG + Telmisartan 40 MG 
+Notes : BP 
+6) CAP. NOVASTAT CV 10MG 10'S 0 – 0 – 1 After Food - daily - 90 Days 90
+Composition : Clopidogrel 75 MG + Rosuvastatin 10 MG 
+7) TAB. MYMI D 0 – 1 – 0 After Food - daily - 90 Days 90
+Composition : Alpha lipoic acid 100 MG + Folic acid 1.5 MG + Mecobalamin 1500 MCG + Vitamin B1 10 MG... 
+Notes : MULTIVITAMINS 
+Next Visit :25-Jan-2027 - Monday 
+Dr Rutul Gokalani
+Download HealthPlix App from Google Play/Apple Appstore to view all your prescriptions 
+Powered by HealthPlix EMR. www.healthplix.com`;
+
+      document.getElementById('modalPasteArea').value = sampleText;
+    }
+
+    // Sync input values to live prescription preview sheet
+    function syncPreview() {
+      // Doctor details
+      document.getElementById('viewDoctorName').textContent = document.getElementById('inputDoctorName').value;
+      
+      const qualLines = document.getElementById('inputQualifications').value.split('\n');
+      const qualContainer = document.getElementById('viewQualifications');
+      qualContainer.innerHTML = '';
+      qualLines.forEach(line => {
+        if (line.trim()) {
+          const div = document.createElement('div');
+          div.textContent = line.trim();
+          qualContainer.appendChild(div);
+        }
+      });
+
+      document.getElementById('viewSignName').textContent = document.getElementById('inputSignName').value;
+
+      // Patient demographics
+      document.getElementById('viewPatientId').textContent = document.getElementById('inputPatientId').value;
+      document.getElementById('viewPatientName').textContent = document.getElementById('inputPatientName').value;
+      document.getElementById('viewAge').textContent = document.getElementById('inputAge').value;
+      document.getElementById('viewGender').textContent = document.getElementById('inputGender').value;
+      document.getElementById('viewBloodGroup').textContent = document.getElementById('inputBloodGroup').value;
+      document.getElementById('viewPhone').textContent = document.getElementById('inputPhone').value;
+      document.getElementById('viewDateTime').textContent = document.getElementById('inputDateTime').value;
+      document.getElementById('viewRefBy').textContent = document.getElementById('inputRefBy').value;
+
+      // Vitals
+      document.getElementById('vBP').textContent = document.getElementById('inputBP').value;
+      document.getElementById('vPulse').textContent = document.getElementById('inputPulse').value;
+      document.getElementById('vHeight').textContent = document.getElementById('inputHeight').value;
+      document.getElementById('vWeight').textContent = document.getElementById('inputWeight').value;
+      document.getElementById('vBMI').textContent = document.getElementById('inputBMI').value;
+      document.getElementById('vWaist').textContent = document.getElementById('inputWaist').value;
+      document.getElementById('vHip').textContent = document.getElementById('inputHip').value;
+      document.getElementById('vWaistHip').textContent = document.getElementById('inputWaistHip').value;
+      document.getElementById('vRBS').textContent = document.getElementById('inputRBS').value;
+      document.getElementById('vHbA1c').textContent = document.getElementById('inputHbA1c').value;
+
+      // Labs
+      const labLines = document.getElementById('inputLabs').value.split('\n');
+      const labsContainer = document.getElementById('viewLabs');
+      labsContainer.innerHTML = '';
+      labLines.forEach(line => {
+        if (line.trim()) {
+          const div = document.createElement('div');
+          div.className = 'rx-lab-line';
+          div.textContent = line.trim();
+          labsContainer.appendChild(div);
+        }
+      });
+
+      // Diagnosis
+      document.getElementById('viewDiagnosis').textContent = document.getElementById('inputDiagnosis').value;
+
+      // Next visit & footer
+      document.getElementById('viewNextVisit').textContent = document.getElementById('inputNextVisit').value;
+      document.getElementById('viewFooterPromo').textContent = document.getElementById('inputFooterPromo').value;
+      document.getElementById('viewFooterCredit').textContent = document.getElementById('inputFooterCredit').value;
+
+      renderPrescriptionTable();
+    }
+
+    // Render medicines in left editor panel
+    function renderMedicinesEditor() {
+      const container = document.getElementById('medicinesEditorList');
+      container.innerHTML = '';
+
+      medicines.forEach((med, index) => {
+        const card = document.createElement('div');
+        card.className = 'medicine-card';
+        card.innerHTML = `
+          <div class="medicine-card-header">
+            <span class="medicine-number">#${index + 1} Medication</span>
+            <div style="display:flex; gap: 4px;">
+              <button class="btn btn-sm btn-outline" onclick="calcQtyForMed(${index})" title="Auto-calculate total pills based on dosage x duration">🧮 Calc Qty</button>
+              <button class="btn btn-sm btn-danger-outline" onclick="removeMedicine(${index})" title="Remove item">✕</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Medicine Name & Strength</label>
+            <input type="text" value="${escapeHtml(med.name)}" oninput="updateMedField(${index}, 'name', this.value)">
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Dosage</label>
+              <input type="text" value="${escapeHtml(med.dosage)}" placeholder="e.g. 1 – 0 – 1" oninput="updateMedField(${index}, 'dosage', this.value)">
+              <div class="quick-chips">
+                <span class="chip" onclick="quickSetDosage(${index}, '1 – 0 – 0')">1-0-0</span>
+                <span class="chip" onclick="quickSetDosage(${index}, '1 – 0 – 1')">1-0-1</span>
+                <span class="chip" onclick="quickSetDosage(${index}, '0 – 0 – 1')">0-0-1</span>
+                <span class="chip" onclick="quickSetDosage(${index}, '1 – 1 – 1')">1-1-1</span>
+                <span class="chip" onclick="quickSetDosage(${index}, '1 – 0 – 0.5')">1-0-0.5</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Quantity (Total Pills)</label>
+              <input type="text" value="${escapeHtml(med.qty)}" placeholder="e.g. 90" oninput="updateMedField(${index}, 'qty', this.value)">
+            </div>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>Timing</label>
+              <input type="text" value="${escapeHtml(med.timing)}" placeholder="After Food" oninput="updateMedField(${index}, 'timing', this.value)">
+              <div class="quick-chips">
+                <span class="chip" onclick="quickSetTiming(${index}, 'Before Breakfast')">Bef. Brk</span>
+                <span class="chip" onclick="quickSetTiming(${index}, 'After Food')">Aft. Food</span>
+                <span class="chip" onclick="quickSetTiming(${index}, 'Before Food')">Bef. Food</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Frequency</label>
+              <input type="text" value="${escapeHtml(med.freq)}" placeholder="daily" oninput="updateMedField(${index}, 'freq', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Duration</label>
+              <input type="text" value="${escapeHtml(med.duration)}" placeholder="90 Days" oninput="updateMedField(${index}, 'duration', this.value)">
+              <div class="quick-chips">
+                <span class="chip" onclick="quickSetDuration(${index}, '30 Days')">30 D</span>
+                <span class="chip" onclick="quickSetDuration(${index}, '60 Days')">60 D</span>
+                <span class="chip" onclick="quickSetDuration(${index}, '90 Days')">90 D</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Composition (Optional)</label>
+            <input type="text" value="${escapeHtml(med.composition)}" placeholder="e.g. Active salts and strength" oninput="updateMedField(${index}, 'composition', this.value)">
+          </div>
+          <div class="form-group">
+            <label>Notes / Indication (e.g. DIABETES, BP)</label>
+            <input type="text" value="${escapeHtml(med.notes)}" placeholder="e.g. DIABETES" oninput="updateMedField(${index}, 'notes', this.value)">
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Render medicines onto the A4 table
+    function renderPrescriptionTable() {
+      const tbody = document.getElementById('viewMedicineTableBody');
+      tbody.innerHTML = '';
+
+      medicines.forEach((med, idx) => {
+        const itemNumber = idx + 1;
+        
+        const timingParts = [];
+        if (med.timing) timingParts.push(med.timing);
+        if (med.freq) timingParts.push(med.freq);
+        if (med.duration) timingParts.push(med.duration);
+        let timingDisplay = timingParts.join(' - ');
+        if (!timingDisplay && med.duration) timingDisplay = `- ${med.duration}`;
+
+        const trMain = document.createElement('tr');
+        trMain.className = 'rx-med-item';
+        trMain.innerHTML = `
+          <td class="rx-med-main rx-med-name">
+            ${itemNumber}) <span contenteditable="true" onblur="updateMedFromSheet(${idx}, 'name', this.textContent)">${escapeHtml(med.name)}</span>
+          </td>
+          <td class="rx-med-main rx-med-dosage">
+            <span contenteditable="true" onblur="updateMedFromSheet(${idx}, 'dosage', this.textContent)">${escapeHtml(med.dosage)}</span>
+          </td>
+          <td class="rx-med-main rx-med-timing">
+            <span contenteditable="true">${escapeHtml(timingDisplay)}</span>
+          </td>
+          <td class="rx-med-main rx-med-qty">
+            <span contenteditable="true" onblur="updateMedFromSheet(${idx}, 'qty', this.textContent)">${escapeHtml(med.qty)}</span>
+          </td>
+        `;
+        tbody.appendChild(trMain);
+
+        // Sub-row for composition / notes
+        if (med.composition || med.notes) {
+          const trSub = document.createElement('tr');
+          let subHtml = `<td colspan="4" class="rx-med-sub">`;
+          if (med.composition) {
+            subHtml += `<div class="rx-composition">Composition : <span contenteditable="true" onblur="updateMedFromSheet(${idx}, 'composition', this.textContent)">${escapeHtml(med.composition)}</span></div>`;
+          }
+          if (med.notes) {
+            subHtml += `<div class="rx-notes">Notes : <strong contenteditable="true" onblur="updateMedFromSheet(${idx}, 'notes', this.textContent)">${escapeHtml(med.notes)}</strong></div>`;
+          }
+          subHtml += `</td>`;
+          trSub.innerHTML = subHtml;
+          tbody.appendChild(trSub);
+        }
+      });
+    }
+
+    // Two-way sync back from sheet edits
+    function syncBack(inputId, value) {
+      const el = document.getElementById(inputId);
+      if (el) el.value = value.trim();
+    }
+
+    function syncBackQuals(container) {
+      const lines = [];
+      container.querySelectorAll('div').forEach(d => {
+        if (d.textContent.trim()) lines.push(d.textContent.trim());
+      });
+      document.getElementById('inputQualifications').value = lines.join('\n');
+    }
+
+    function syncBackLabs(container) {
+      const lines = [];
+      container.querySelectorAll('.rx-lab-line').forEach(d => {
+        if (d.textContent.trim()) lines.push(d.textContent.trim());
+      });
+      if (lines.length > 0) {
+        document.getElementById('inputLabs').value = lines.join('\n');
+      } else {
+        document.getElementById('inputLabs').value = container.innerText.trim();
+      }
+    }
+
+    function updateMedField(index, field, value) {
+      medicines[index][field] = value;
+      renderPrescriptionTable();
+    }
+
+    function updateMedFromSheet(index, field, value) {
+      if (medicines[index]) {
+        medicines[index][field] = value.trim();
+        renderMedicinesEditor();
+      }
+    }
+
+    function quickSetDosage(index, val) {
+      medicines[index].dosage = val;
+      calcQtyForMed(index);
+    }
+    function quickSetTiming(index, val) {
+      medicines[index].timing = val;
+      renderPrescriptionTable();
+      renderMedicinesEditor();
+    }
+    function quickSetDuration(index, val) {
+      medicines[index].duration = val;
+      calcQtyForMed(index);
+    }
+
+    function addNewMedicine() {
+      medicines.push({
+        id: Date.now(),
+        name: "TAB. ",
+        dosage: "1 – 0 – 0",
+        timing: "After Food",
+        freq: "daily",
+        duration: "30 Days",
+        qty: "30",
+        composition: "",
+        notes: ""
+      });
+      renderMedicinesEditor();
+      renderPrescriptionTable();
+      const editorPanel = document.querySelector('.editor-panel');
+      editorPanel.scrollTop = editorPanel.scrollHeight;
+    }
+
+    function removeMedicine(index) {
+      if (confirm(`Remove medication #${index + 1}?`)) {
+        medicines.splice(index, 1);
+        renderMedicinesEditor();
+        renderPrescriptionTable();
+      }
+    }
+
+    function calcQtyForMed(index) {
+      const med = medicines[index];
+      const dosageStr = med.dosage || "";
+      const durationStr = med.duration || "";
+
+      const parts = dosageStr.split(/[\-\–]/).map(p => parseFloat(p.trim())).filter(n => !isNaN(n));
+      const dailyDose = parts.length > 0 ? parts.reduce((a, b) => a + b, 0) : 1;
+
+      const match = durationStr.match(/\d+/);
+      const days = match ? parseInt(match[0], 10) : 30;
+
+      const totalQty = Math.ceil(dailyDose * days);
+      med.qty = totalQty > 0 ? totalQty.toString() : "";
+      renderMedicinesEditor();
+      renderPrescriptionTable();
+    }
+
+    function autoCalculateBMI() {
+      const hCm = parseFloat(document.getElementById('inputHeight').value);
+      const wKg = parseFloat(document.getElementById('inputWeight').value);
+      if (hCm > 0 && wKg > 0) {
+        const hM = hCm / 100;
+        const bmi = (wKg / (hM * hM)).toFixed(2);
+        document.getElementById('inputBMI').value = bmi;
+        document.getElementById('vBMI').textContent = bmi;
+      }
+    }
+
+    function autoCalculateWaistHip() {
+      const waist = parseFloat(document.getElementById('inputWaist').value);
+      const hip = parseFloat(document.getElementById('inputHip').value);
+      if (waist > 0 && hip > 0) {
+        const ratio = (waist / hip).toFixed(2);
+        document.getElementById('inputWaistHip').value = ratio;
+        document.getElementById('vWaistHip').textContent = ratio;
+      }
+    }
+
+    function setNextVisitDays(daysToAdd) {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + daysToAdd);
+
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+      const d = String(targetDate.getDate()).padStart(2, '0');
+      const m = months[targetDate.getMonth()];
+      const y = targetDate.getFullYear();
+      const dayName = days[targetDate.getDay()];
+
+      const formatted = `${d}-${m}-${y} - ${dayName}`;
+      document.getElementById('inputNextVisit').value = formatted;
+      syncPreview();
+    }
+
+    function setCurrentDateTime() {
+      const now = new Date();
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const d = String(now.getDate()).padStart(2, '0');
+      const m = months[now.getMonth()];
+      const y = now.getFullYear();
+
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const hStr = String(hours).padStart(2, '0');
+
+      const formatted = `${d}-${m}-${y} ${hStr}:${minutes} ${ampm}`;
+      document.getElementById('inputDateTime').value = formatted;
+      syncPreview();
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const logoBox = document.getElementById('logoDisplayBox');
+          logoBox.innerHTML = `<img src="${e.target.result}" class="custom-logo-img" alt="Clinic Logo">`;
+          showToast("Custom clinic logo uploaded!");
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function clearAllFields() {
+      if (!confirm("Start prescription for a new patient? (Current patient inputs will be reset)")) return;
+      document.getElementById('inputPatientId').value = Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('inputPatientName').value = "Mr. ";
+      document.getElementById('inputAge').value = "";
+      document.getElementById('inputBloodGroup').value = "";
+      document.getElementById('inputPhone').value = "";
+      document.getElementById('inputRefBy').value = "Self";
+      document.getElementById('inputBP').value = "120/80";
+      document.getElementById('inputPulse').value = "72";
+      document.getElementById('inputHeight').value = "";
+      document.getElementById('inputWeight').value = "";
+      document.getElementById('inputBMI').value = "";
+      document.getElementById('inputWaist').value = "";
+      document.getElementById('inputHip').value = "";
+      document.getElementById('inputWaistHip').value = "";
+      document.getElementById('inputRBS').value = "";
+      document.getElementById('inputHbA1c').value = "";
+      document.getElementById('inputLabs').value = "";
+      document.getElementById('inputDiagnosis').value = "";
+      medicines = [
+        {
+          id: Date.now(),
+          name: "TAB. ",
+          dosage: "1 – 0 – 1",
+          timing: "After Food",
+          freq: "daily",
+          duration: "30 Days",
+          qty: "60",
+          composition: "",
+          notes: ""
+        }
+      ];
+      setCurrentDateTime();
+      setNextVisitDays(30);
+      renderMedicinesEditor();
+      syncPreview();
+      showToast("Cleared for new patient!");
+    }
+
+    function loadSampleData() {
+      medicines = JSON.parse(JSON.stringify(defaultSampleMedicines));
+
+      document.getElementById('inputDoctorName').value = "Dr. Rutul A. Gokalani (Thakkar)";
+      document.getElementById('inputQualifications').value = `M.D. (Physician) FID (Fellow in Diabetes)
+Apollo Hospitals & Liverpool, U.K.
+PG Diploma in Diabetes, Middlesex Uni. U.K.
+PG Diploma in Diabetes & Complications, EASD, Czech Republic
+PG Diploma in Diabetes & Technology (Greece)
+Certified in Diabetology (RSSDI)
+CCGDM, CCMTD, CCDR, CCGDM (PHFI)`;
+      document.getElementById('inputSignName').value = "Dr Rutul Gokalani";
+      document.getElementById('inputPatientId').value = "5224";
+      document.getElementById('inputPatientName').value = "Mr. Nigam Parikh";
+      document.getElementById('inputAge').value = "74y";
+      document.getElementById('inputGender').value = "Male";
+      document.getElementById('inputBloodGroup').value = "B+ve";
+      document.getElementById('inputPhone').value = "9426638923";
+      document.getElementById('inputDateTime').value = "27-Oct-2026 05:37 PM";
+      document.getElementById('inputRefBy').value = "Dr. Google";
+      document.getElementById('inputBP').value = "100/70";
+      document.getElementById('inputPulse').value = "88";
+      document.getElementById('inputHeight').value = "159";
+      document.getElementById('inputWeight').value = "66.60";
+      document.getElementById('inputBMI').value = "26.34";
+      document.getElementById('inputWaist').value = "100";
+      document.getElementById('inputHip').value = "96";
+      document.getElementById('inputWaistHip').value = "1.04";
+      document.getElementById('inputRBS').value = "140";
+      document.getElementById('inputHbA1c').value = "6.3";
+      document.getElementById('inputLabs').value = `[02-Oct-2025] Urine Albumin :15.89 mg/L , Urine Creatinine :54.43 mg/dL , Spot Albumin Creatinine Ratio :29.7 mg/g
+[07-Sep-2026] Haemoglobin (Hb) :13.2 Gms % , Total WBC Count :9120 Cells/cu mm , Haematocrit (PCV) :39.1 % , Neutrophils :62 % , Lymphocytes :26 % , Eosinophils :02 % , Monocytes :10 % , Basophils :00 %`;
+      document.getElementById('inputDiagnosis').value = "DIABETES MELLITUS TYPE 2 since 26.1 Years , HYPERTENSION since 16.1 Years , DYSLIPIDEMIA since 16.1 Years";
+      document.getElementById('inputNextVisit').value = "25-Jan-2027 - Monday";
+
+      renderMedicinesEditor();
+      syncPreview();
+      showToast("Loaded sample prescription!");
+    }
+
+    // Local Storage Patient Record Saver
+    function saveToLocalRecords() {
+      const patientId = document.getElementById('inputPatientId').value;
+      const patientName = document.getElementById('inputPatientName').value;
+      const key = `prescription_${patientId || Date.now()}`;
+
+      const data = {
+        patientId,
+        patientName,
+        age: document.getElementById('inputAge').value,
+        gender: document.getElementById('inputGender').value,
+        bloodGroup: document.getElementById('inputBloodGroup').value,
+        phone: document.getElementById('inputPhone').value,
+        refBy: document.getElementById('inputRefBy').value,
+        dateTime: document.getElementById('inputDateTime').value,
+        bp: document.getElementById('inputBP').value,
+        pulse: document.getElementById('inputPulse').value,
+        height: document.getElementById('inputHeight').value,
+        weight: document.getElementById('inputWeight').value,
+        bmi: document.getElementById('inputBMI').value,
+        waist: document.getElementById('inputWaist').value,
+        hip: document.getElementById('inputHip').value,
+        waistHip: document.getElementById('inputWaistHip').value,
+        rbs: document.getElementById('inputRBS').value,
+        hba1c: document.getElementById('inputHbA1c').value,
+        labs: document.getElementById('inputLabs').value,
+        diagnosis: document.getElementById('inputDiagnosis').value,
+        nextVisit: document.getElementById('inputNextVisit').value,
+        medicines: medicines,
+        savedAt: new Date().toLocaleString()
+      };
+
+      try {
+        localStorage.setItem(key, JSON.stringify(data));
+        showToast(`Saved prescription for ${patientName}!`);
+        loadSavedRecordsList();
+      } catch (e) {
+        showToast("Error saving record: " + e.message);
+      }
+    }
+
+    function loadSavedRecordsList() {
+      const container = document.getElementById('savedRecordsList');
+      const section = document.getElementById('savedRecordsSection');
+      container.innerHTML = '';
+
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('prescription_'));
+      if (keys.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+      keys.forEach(k => {
+        try {
+          const rec = JSON.parse(localStorage.getItem(k));
+          const div = document.createElement('div');
+          div.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem;";
+          div.innerHTML = `
+            <span><strong>${escapeHtml(rec.patientId)}</strong>: ${escapeHtml(rec.patientName)}</span>
+            <div style="display: flex; gap: 4px;">
+              <button class="btn btn-sm btn-outline" onclick="restoreRecord('${k}')">Load</button>
+              <button class="btn btn-sm btn-danger-outline" onclick="deleteRecord('${k}')">✕</button>
+            </div>
+          `;
+          container.appendChild(div);
+        } catch(e) {}
+      });
+    }
+
+    function restoreRecord(key) {
+      try {
+        const rec = JSON.parse(localStorage.getItem(key));
+        if (!rec) return;
+
+        document.getElementById('inputPatientId').value = rec.patientId || "";
+        document.getElementById('inputPatientName').value = rec.patientName || "";
+        document.getElementById('inputAge').value = rec.age || "";
+        document.getElementById('inputGender').value = rec.gender || "Male";
+        document.getElementById('inputBloodGroup').value = rec.bloodGroup || "";
+        document.getElementById('inputPhone').value = rec.phone || "";
+        document.getElementById('inputRefBy').value = rec.refBy || "";
+        document.getElementById('inputDateTime').value = rec.dateTime || "";
+        document.getElementById('inputBP').value = rec.bp || "";
+        document.getElementById('inputPulse').value = rec.pulse || "";
+        document.getElementById('inputHeight').value = rec.height || "";
+        document.getElementById('inputWeight').value = rec.weight || "";
+        document.getElementById('inputBMI').value = rec.bmi || "";
+        document.getElementById('inputWaist').value = rec.waist || "";
+        document.getElementById('inputHip').value = rec.hip || "";
+        document.getElementById('inputWaistHip').value = rec.waistHip || "";
+        document.getElementById('inputRBS').value = rec.rbs || "";
+        document.getElementById('inputHbA1c').value = rec.hba1c || "";
+        document.getElementById('inputLabs').value = rec.labs || "";
+        document.getElementById('inputDiagnosis').value = rec.diagnosis || "";
+        document.getElementById('inputNextVisit').value = rec.nextVisit || "";
+        medicines = rec.medicines || [];
+
+        renderMedicinesEditor();
+        syncPreview();
+        showToast(`Loaded prescription for ${rec.patientName}!`);
+      } catch(e) {
+        showToast("Error loading: " + e.message);
+      }
+    }
+
+    function deleteRecord(key) {
+      if (confirm("Delete this saved record?")) {
+        localStorage.removeItem(key);
+        loadSavedRecordsList();
+        showToast("Deleted record");
+      }
+    }
+
+    function clearSavedRecords() {
+      if (confirm("Clear all saved patient records?")) {
+        const keys = Object.keys(localStorage).filter(k => k.startsWith('prescription_'));
+        keys.forEach(k => localStorage.removeItem(k));
+        loadSavedRecordsList();
+        showToast("All records cleared");
+      }
+    }
+
+    function toggleDoctorFields() {
+      const container = document.getElementById('doctorFieldsContainer');
+      container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSampleData();
+      loadSavedRecordsList();
+    });
+  </script>
+</body>
+</html>
